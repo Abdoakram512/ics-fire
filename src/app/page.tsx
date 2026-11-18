@@ -9,11 +9,12 @@ import {
   Check,
   FileDown,
   ShieldCheck,
-  FileCheck2,
+  Clock,
   Award,
   Truck,
   PhoneCall,
   FileSpreadsheet,
+  Sparkles,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -23,12 +24,6 @@ import { useApp } from "@/context/AppContext";
 import { useQuote } from "@/context/QuoteContext";
 import { brand, categories, products, money, quoteLines, quoteTotal, samplePricing } from "@/lib/catalog";
 import { downloadQuotePdf } from "@/lib/download-quote";
-
-const disciplineMeta = [
-  { std: "EN3 · CE", ar: "طفايات بودرة جافة وثاني أكسيد الكربون", en: "ABC dry powder & CO₂ portable units" },
-  { std: "EN54 · LPCB", ar: "كواشف دخان بصرية وأجهزة إنذار ضوئية", en: "Optical smoke sensors & sounder strobes" },
-  { std: "EN671 · NFPA 14", ar: "بكرات خراطيم وكبائن صلب مجلفن", en: "Continuous-flow reels & galvanized cabinets" },
-];
 
 export default function HomePage() {
   const { lang } = useApp();
@@ -67,22 +62,22 @@ export default function HomePage() {
     {
       icon: ShieldCheck,
       title: ar ? "معتمد من الدفاع المدني" : "Civil Defence Approved",
-      desc: ar ? "مطابق لاشتراطات لجان التفتيش وكود EN3 و NFPA" : "Certified to EN3, EN54 & NFPA codes",
+      desc: ar ? "مطابق لاشتراطات لجان التفتيش وكود NFPA و EN3" : "Certified to EN3, EN54 & NFPA codes",
     },
     {
-      icon: FileCheck2,
-      title: ar ? "التوثيق الفني والاعتمادات" : "Technical Submittals",
-      desc: ar ? "صحائف بيانات وتقارير فحص هيدروستاتيكي معتمدة" : "Complete datasheets & hydrostatic test reports",
+      icon: Clock,
+      title: ar ? "تنزيل عرض سعر فوري" : "Instant PDF Quotation",
+      desc: ar ? "حدد كمياتك ونزّل ملف PDF رسمي في ثوانٍ" : "Select quantities and download official PDF in seconds",
     },
     {
       icon: Award,
       title: ar ? "ضمان مصنعي 5 سنوات" : "5-Year Warranty",
-      desc: ar ? "ضمان مصنعي شامل مع توفير قطع الغيار الأصلية" : "Comprehensive factory warranty & spare parts",
+      desc: ar ? "ضمان مصنعي شامل مع توفير قطع الغيار والدعم" : "Comprehensive factory warranty & spare parts",
     },
     {
       icon: Truck,
       title: ar ? "توريد فوري للمواقع" : "Direct Site Dispatch",
-      desc: ar ? "مخزون جاهز يلبي متطلبات التوريد للمشروعات" : "Substantial stock ready for project schedules",
+      desc: ar ? "مخزون استراتيجي يلبي متطلبات التوريد العاجل" : "Strategic stock ready for urgent dispatch",
     },
   ];
 
@@ -95,9 +90,10 @@ export default function HomePage() {
         <section className="ics-hero">
           <div className="ics-shell ics-hero-grid">
             <div className="ics-hero-copy">
-              <p className="ics-eyebrow">
-                {ar ? "أنظمة مكافحة الحريق المعتمدة · EN3 / NFPA" : "Certified Fire Protection · EN3 / NFPA"}
-              </p>
+              <div className="ics-hero-badge">
+                <Sparkles size={14} className="ics-badge-icon" aria-hidden="true" />
+                <span>{ar ? "أنظمة مكافحة الحريق والسلامة الصناعية" : "Industrial Fire Protection & Safety Systems"}</span>
+              </div>
 
               <h1>
                 {ar ? "معدات الحريق المعتمدة" : "Fire protection"}
@@ -189,24 +185,6 @@ export default function HomePage() {
                 <span>{ar ? "عرض كامل الكتالوج (6)" : "View full catalog (6)"}</span>
                 <ArrowUpRight size={17} className="rtl-flip" />
               </Link>
-            </div>
-
-            {/* Compact 3-discipline filter bar */}
-            <div className="ics-discipline-strip" aria-label={ar ? "التصنيفات" : "Categories"}>
-              {categories.map((category, index) => (
-                <Link
-                  href={"/products?category=" + category.id}
-                  className="ics-discipline-tile"
-                  key={category.id}
-                >
-                  <div className="ics-discipline-head">
-                    <span className="ics-discipline-std"><bdi>{disciplineMeta[index].std}</bdi></span>
-                    <ArrowUpRight size={16} className="rtl-flip" aria-hidden="true" />
-                  </div>
-                  <h3>{category[lang]}</h3>
-                  <p>{disciplineMeta[index][lang]}</p>
-                </Link>
-              ))}
             </div>
 
             {samplePricing && (
