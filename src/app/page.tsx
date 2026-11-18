@@ -3,81 +3,76 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
+  ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
-  Check,
-  FileDown,
-  ShieldCheck,
-  Clock,
   Award,
-  Truck,
-  PhoneCall,
-  FileSpreadsheet,
+  Check,
   ChevronLeft,
   ChevronRight,
+  Clock,
+  FileDown,
+  FileSpreadsheet,
+  PhoneCall,
+  Plus,
+  ShieldCheck,
+  Truck,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
+import ProductCarousel from "@/components/ProductCarousel";
 import CatalogSearch from "@/components/CatalogSearch";
 import { useApp } from "@/context/AppContext";
 import { useQuote } from "@/context/QuoteContext";
-import { brand, categories, products, money, quoteLines, quoteTotal, samplePricing } from "@/lib/catalog";
+import { brand, categories, money, products, quoteLines, quoteTotal, samplePricing } from "@/lib/catalog";
 import { downloadQuotePdf } from "@/lib/download-quote";
 
-const heroSlides = [
-  { product: products[0], badge: "EN3 · CE" },
-  { product: products[3], badge: "EN671 · NFPA 14" },
-  { product: products[2], badge: "EN54 · LPCB" },
-  { product: products[1], badge: "EN3 · CE" },
-];
+const HERO_FEATURED_IDS = ["ics-p06", "ics-c05", "ics-h30"] as const;
+const BEST_SELLER_IDS = ["ics-p06", "ics-h30", "ics-d01", "ics-b01"] as const;
 
 export default function HomePage() {
-  const { lang } = useApp();
+  const { lang, t } = useApp();
   const ar = lang === "ar";
   const router = useRouter();
-  const { quantities, openQuote } = useQuote();
+  const { quantities, changeQuantity, openQuote } = useQuote();
   const [query, setQuery] = useState("");
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [heroPaused, setHeroPaused] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [pdfPending, setPdfPending] = useState(false);
   const [pdfDone, setPdfDone] = useState(false);
 
-  const [heroIndex, setHeroIndex] = useState(0);
-  const [heroPaused, setHeroPaused] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const heroItems = HERO_FEATURED_IDS.map((id) => products.find((p) => p.id === id)!);
+  const heroProduct = heroItems[heroIndex] ?? products[0];
+  const heroQty = quantities[heroProduct.id] ?? 0;
 
   useEffect(() => {
     if (heroPaused) return;
-    const timer = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, [heroPaused]);
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroItems.length);
+    }, 4200);
+    return () => window.clearInterval(timer);
+  }, [heroPaused, heroItems.length]);
 
-  function nextHeroSlide() {
-    setHeroIndex((prev) => (prev + 1) % heroSlides.length);
-  }
+  const catalogItems =
+    activeCategory === "all"
+      ? products
+      : products.filter((p) => categories[p.category].id === activeCategory);
 
-  function prevHeroSlide() {
-    setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  }
+  const bestSellerItems = BEST_SELLER_IDS.map((id) => products.find((p) => p.id === id)!);
 
-  function scrollCarousel(direction: "left" | "right") {
-    const el = carouselRef.current;
-    if (!el) return;
-    const amount = 330;
-    el.scrollBy({ left: direction === "right" ? amount : -amount, behavior: "smooth" });
-  }
-
-  const activeSlide = heroSlides[heroIndex];
-  const heroProduct = activeSlide.product;
   const activeLines = quoteLines(quantities);
   const hasSelection = activeLines.length > 0;
   const previewLines = hasSelection
     ? activeLines.slice(0, 4)
     : [
         { product: products[0], quantity: 1 },
-        { product: products[2], quantity: 1 },
+        { product: products[3], quantity: 1 },
       ];
   const previewTotal = quoteTotal(hasSelection ? activeLines : previewLines);
 
@@ -122,24 +117,25 @@ export default function HomePage() {
       <Navbar activePage="home" />
 
       <main>
-        {/* 1. HERO SECTION */}
+        {/* 1. INDUSTRIAL PRECISION HERO SECTION */}
         <section className="ics-hero">
           <div className="ics-shell ics-hero-grid">
             <div className="ics-hero-copy">
-              <p className="ics-eyebrow">
-                {ar ? "أنظمة مكافحة الحريق والسلامة الصناعية" : "Industrial Fire Protection & Safety Systems"}
+              <p className="ics-hero-eyebrow">
+                <span className="ics-hero-eyebrow-bar" aria-hidden="true" />
+                <span>{ar ? "أنظمة مكافحة الحريق المعتمدة · EN3 / EN54 / NFPA" : "Certified Fire Protection · EN3 / EN54 / NFPA"}</span>
               </p>
 
               <h1>
-                {ar ? "معدات الحريق المعتمدة" : "Fire protection"}
+                {ar ? "معدات الحريق المعتمدة" : "Certified fire safety"}
                 <br />
-                <em>{ar ? "لمشروعك الإنشائي." : "for your project."}</em>
+                <em>{ar ? "لمشروعك الإنشائي." : "built for your project."}</em>
               </h1>
 
-              <p>
+              <p className="ics-hero-lead">
                 {ar
-                  ? "استعرض المواصفات الفنية والأسعار الاسترشادية، واختر معداتك لتجهيز وتنزيل عرض سعر PDF رسمي مباشرة."
-                  : "Explore certified hardware, review technical specs and sample pricing, and download an itemized PDF quotation directly."}
+                  ? "استعرض المواصفات الفنية والأسعار الاسترشادية، وجهّز عرض سعر PDF رسمياً لمعدات الإطفاء والإنذار المعتمدة خلال ثوانٍ."
+                  : "Explore certified suppression and alarm hardware, review technical specifications and provisional pricing, and download an itemized PDF quotation directly."}
               </p>
 
               <CatalogSearch
@@ -157,87 +153,137 @@ export default function HomePage() {
                   <span>{ar ? "تصفح الكتالوج واختيار المعدات" : "Browse equipment catalog"}</span>
                   <ArrowUpRight size={17} className="rtl-flip" />
                 </Link>
-                <Link className="ics-muted-link" href="/contact">
+                <Link className="ics-hero-secondary-btn" href="/contact">
                   <FileSpreadsheet size={16} />
                   <span>{ar ? "طلب تسعير مشروع (BOQ)" : "Submit project BOQ"}</span>
                 </Link>
               </div>
+
+              <div className="ics-hero-meta-bar" aria-label={ar ? "اعتمادات التوريد" : "Supply highlights"}>
+                <span>{ar ? "اعتماد الدفاع المدني" : "Civil Defence compliant"}</span>
+                <i aria-hidden="true" />
+                <span>{ar ? "تسعير BOQ خلال ٢٤ ساعة" : "24h BOQ estimation"}</span>
+                <i aria-hidden="true" />
+                <span>{ar ? "إصدار PDF عربي فوري" : "Instant Arabic PDF"}</span>
+              </div>
             </div>
 
             <div
-              className="ics-hero-visual"
+              className="ics-hero-stage"
+              tabIndex={0}
               onMouseEnter={() => setHeroPaused(true)}
               onMouseLeave={() => setHeroPaused(false)}
+              onFocus={() => setHeroPaused(true)}
+              onBlur={() => setHeroPaused(false)}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowLeft") {
+                  event.preventDefault();
+                  setHeroIndex((prev) => (ar ? (prev + 1) % heroItems.length : (prev - 1 + heroItems.length) % heroItems.length));
+                } else if (event.key === "ArrowRight") {
+                  event.preventDefault();
+                  setHeroIndex((prev) => (ar ? (prev - 1 + heroItems.length) % heroItems.length : (prev + 1) % heroItems.length));
+                }
+              }}
             >
-              <div className="ics-hero-slider-wrap">
+              <div className="ics-hero-plinth">
+                <div className="ics-hero-reticle" aria-hidden="true" />
+                <div className="ics-hero-spotlight" aria-hidden="true" />
+
+                <button
+                  type="button"
+                  className="ics-hero-arrow is-prev"
+                  onClick={() => setHeroIndex((prev) => (prev - 1 + heroItems.length) % heroItems.length)}
+                  aria-label={ar ? "المعدة السابقة" : "Previous unit"}
+                >
+                  {ar ? <ChevronRight size={19} /> : <ChevronLeft size={19} />}
+                </button>
+
                 <Link
                   href={"/products/" + heroProduct.id}
-                  className="ics-hero-image"
+                  className="ics-hero-equipment"
                   aria-label={heroProduct[lang]}
-                  key={heroProduct.id}
                 >
-                  <span className="ics-hero-slide-badge">{activeSlide.badge}</span>
                   <Image
-                    src={"/assets/" + heroProduct.image}
+                    key={heroProduct.id}
+                    src={"/assets/" + (heroProduct.id === "ics-p06" ? "studio-hd/hero-extinguisher.png" : heroProduct.image)}
                     alt={heroProduct[lang]}
                     fill
-                    sizes="(max-width: 700px) 95vw, 45vw"
-                    priority
+                    sizes="(max-width: 767px) 88vw, 44vw"
+                    preload
                   />
                 </Link>
 
                 <button
                   type="button"
-                  className="ics-hero-arrow ics-hero-prev"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (ar) nextHeroSlide();
-                    else prevHeroSlide();
-                  }}
-                  aria-label={ar ? "السابق" : "Previous"}
+                  className="ics-hero-arrow is-next"
+                  onClick={() => setHeroIndex((prev) => (prev + 1) % heroItems.length)}
+                  aria-label={ar ? "المعدة التالية" : "Next unit"}
                 >
-                  <ChevronRight size={22} className="rtl-flip" />
+                  {ar ? <ChevronLeft size={19} /> : <ChevronRight size={19} />}
                 </button>
 
-                <button
-                  type="button"
-                  className="ics-hero-arrow ics-hero-next"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (ar) prevHeroSlide();
-                    else nextHeroSlide();
-                  }}
-                  aria-label={ar ? "التالي" : "Next"}
-                >
-                  <ChevronLeft size={22} className="rtl-flip" />
-                </button>
+                <div className="ics-hero-floor-shadow" aria-hidden="true" />
               </div>
 
-              {/* Slider Dots */}
-              <div className="ics-hero-dots" role="tablist" aria-label={ar ? "شرائح العرض" : "Hero slides"}>
-                {heroSlides.map((slide, idx) => (
+              {/* Technical Spec Readout & Equipment Selector */}
+              <div className="ics-hero-readout">
+                <div className="ics-hero-readout-info">
+                  <div className="ics-hero-readout-top">
+                    <span className="ics-hero-sku"><bdi>{heroProduct.id.toUpperCase()}</bdi></span>
+                    <span className="ics-hero-spec-inline">{t("prod." + heroProduct.id + ".specs")}</span>
+                  </div>
+                  <div className="ics-hero-readout-bottom">
+                    <Link href={"/products/" + heroProduct.id} className="ics-hero-unit-name">
+                      {heroProduct[lang]}
+                    </Link>
+                    <strong className="ics-hero-unit-price">
+                      <bdi>{money(heroProduct.price, lang)}</bdi>
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="ics-hero-readout-actions">
+                  <div className="ics-hero-switcher" role="tablist" aria-label={ar ? "معدات مميزة" : "Featured equipment"}>
+                    {heroItems.map((item, idx) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={idx === heroIndex}
+                        className={"ics-hero-switch-tab" + (idx === heroIndex ? " is-active" : "")}
+                        onClick={() => setHeroIndex(idx)}
+                      >
+                        <bdi>{item.id.toUpperCase()}</bdi>
+                      </button>
+                    ))}
+                  </div>
                   <button
-                    key={slide.product.id}
                     type="button"
-                    role="tab"
-                    aria-selected={idx === heroIndex}
-                    className={"ics-hero-dot" + (idx === heroIndex ? " is-active" : "")}
-                    onClick={() => setHeroIndex(idx)}
-                    aria-label={(ar ? "شريحة " : "Slide ") + (idx + 1) + ": " + slide.product[lang]}
-                  />
-                ))}
-              </div>
-
-              <div className="ics-hero-caption">
-                <bdi>{heroProduct.id.toUpperCase()}</bdi>
-                <span>{heroProduct[lang]}</span>
-                <span className="ics-price"><bdi>{money(heroProduct.price, lang)}</bdi></span>
+                    className="ics-hero-quick-add"
+                    onClick={() => {
+                      if (heroQty === 0) changeQuantity(heroProduct.id, 1);
+                      else openQuote();
+                    }}
+                  >
+                    {heroQty === 0 ? (
+                      <>
+                        <Plus size={14} />
+                        <span>{ar ? "أضف للعرض" : "Add"}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check size={14} />
+                        <span>{ar ? `في العرض (${heroQty})` : `In quote (${heroQty})`}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 2. ARCHITECTURAL STANDARDS BAR */}
+        {/* 2. CRIMSON STANDARDS & APPROVALS BAR */}
         <section className="ics-trust-bar" aria-label={ar ? "معايير الجودة والاعتمادات" : "Quality & Compliance Standards"}>
           <div className="ics-shell">
             <div className="ics-trust-grid">
@@ -246,7 +292,7 @@ export default function HomePage() {
                 return (
                   <div key={idx} className="ics-trust-item">
                     <div className="ics-trust-icon" aria-hidden="true">
-                      <Icon size={20} strokeWidth={1.8} />
+                      <Icon size={20} strokeWidth={1.85} />
                     </div>
                     <div className="ics-trust-text">
                       <h3>{pillar.title}</h3>
@@ -259,76 +305,93 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 3. BEST SELLERS / CERTIFIED SHOWCASE (4HAND INSPIRED CAROUSEL) */}
-        <section className="ics-catalog-showcase" aria-labelledby="bestsellers-title">
+        {/* 3. INTERACTIVE EQUIPMENT CATALOG CAROUSEL */}
+        <section className="ics-catalog-showcase" aria-labelledby="catalog-showcase-title">
           <div className="ics-shell">
-            <div className="ics-section-heading ics-bestsellers-heading">
+            <div className="ics-section-heading">
               <div>
-                <p className="ics-eyebrow">{ar ? "الأنظمة القياسية المعتمدة" : "Certified Standards"}</p>
-                <h2 id="bestsellers-title">
-                  {ar ? "الأكثر طلباً ومبيعاً" : "Most Requested & Bestsellers"}
+                <p className="ics-eyebrow">{ar ? "الكتالوج والأنظمة القياسية" : "Equipment Disciplines & Hardware"}</p>
+                <h2 id="catalog-showcase-title">
+                  {ar ? "تصفح المعدات وأضفها لعرض السعر" : "Explore equipment for your quotation"}
                 </h2>
-                <p className="ics-section-sub">
-                  {ar
-                    ? "مجموعة معدات الإطفاء والسلامة الأكثر اعتماداً في المشروعات الإنشائية والهندسية."
-                    : "Top-specified fire safety and protection equipment across enterprise projects."}
-                </p>
               </div>
-
-              <div className="ics-heading-actions">
-                <div className="ics-carousel-controls" aria-label={ar ? "التنقل في المنتجات" : "Product carousel navigation"}>
-                  <button
-                    type="button"
-                    className="ics-carousel-arrow"
-                    onClick={() => scrollCarousel(ar ? "right" : "left")}
-                    aria-label={ar ? "السابق" : "Previous"}
-                  >
-                    <ChevronRight size={19} className="rtl-flip" />
-                  </button>
-                  <button
-                    type="button"
-                    className="ics-carousel-arrow"
-                    onClick={() => scrollCarousel(ar ? "left" : "right")}
-                    aria-label={ar ? "التالي" : "Next"}
-                  >
-                    <ChevronLeft size={19} className="rtl-flip" />
-                  </button>
-                </div>
-
-                <Link className="ics-text-link ics-bestsellers-all" href="/products">
-                  <span>{ar ? "عرض كل المنتجات (6)" : "View all equipment (6)"}</span>
-                  <ArrowUpRight size={17} className="rtl-flip" />
-                </Link>
-              </div>
+              <Link className="ics-text-link" href="/products">
+                <span>{ar ? "عرض كامل الكتالوج (6)" : "View full catalog (6)"}</span>
+                <ArrowUpRight size={17} className="rtl-flip" />
+              </Link>
             </div>
 
-            {/* Smooth Horizontal Carousel Track with 4Hand Card Formatting */}
-            <div className="ics-carousel-container">
-              <div
-                className="ics-carousel-track"
-                ref={carouselRef}
-                role="region"
-                aria-label={ar ? "شريط المنتجات الأكثر طلباً" : "Bestseller equipment track"}
-              >
-                {products.map((product) => (
-                  <div className="ics-carousel-slide" key={product.id}>
-                    <ProductCard product={product} />
-                  </div>
+            <div className="ics-showcase-toolbar">
+              <div className="ics-filter" role="group" aria-label={ar ? "تصفية حسب الفئة" : "Filter by category"}>
+                <button
+                  type="button"
+                  aria-pressed={activeCategory === "all"}
+                  onClick={() => setActiveCategory("all")}
+                >
+                  {ar ? `كل المعدات (${products.length})` : `All equipment (${products.length})`}
+                </button>
+                {categories.map((cat, idx) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    aria-pressed={activeCategory === cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                  >
+                    {cat[lang]} ({products.filter((p) => p.category === idx).length})
+                  </button>
                 ))}
               </div>
+
+              {samplePricing && (
+                <p className="ics-price-notice">
+                  {ar
+                    ? "الأسعار المعروضة استرشادية بالجنيه المصري لحين اعتماد إدارة المبيعات."
+                    : "Displayed prices are provisional in EGP pending final sales approval."}
+                </p>
+              )}
             </div>
 
-            {samplePricing && (
-              <p className="ics-price-notice" style={{ marginTop: 18 }}>
-                {ar
-                  ? "* الأسعار المعروضة استرشادية لتسهيل الحساب المبدئي لحين اعتماد إدارة المبيعات."
-                  : "* Displayed prices are provisional to assist with estimation pending final sales approval."}
-              </p>
-            )}
+            <ProductCarousel
+              key={activeCategory}
+              products={catalogItems}
+              variant="catalog"
+              ariaLabel={ar ? "كتالوج معدات الحريق التفاعلي" : "Interactive fire equipment catalog carousel"}
+            />
           </div>
         </section>
 
-        {/* 4. DIRECT INSTANT PDF QUOTATION */}
+        {/* 4. BEST-SELLING / TOP REQUESTED SAFETY HARDWARE */}
+        <section className="ics-bestsellers-band" aria-labelledby="bestsellers-title">
+          <div className="ics-shell">
+            <div className="ics-bestsellers-header">
+              <div className="ics-bestsellers-title-group">
+                <h2 id="bestsellers-title">{ar ? "الأكثر طلباً ومبيعاً" : "Most Requested Equipment"}</h2>
+                <div className="ics-heading-rule" aria-hidden="true" />
+                <p>
+                  {ar
+                    ? "التجهيزات الأساسية الأكثر طلباً لاعتماد لجان الدفاع المدني وتجهيز المشروعات التجارية والصناعية."
+                    : "Core certified safety units most commonly requested for Civil Defence inspections and MEP submittals."}
+                </p>
+              </div>
+
+              <Link className="ics-pill-action" href="/products">
+                <span>{ar ? "عرض كل المنتجات" : "View all products"}</span>
+                <span className="ics-pill-arrow" aria-hidden="true">
+                  {ar ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
+                </span>
+              </Link>
+            </div>
+
+            <ProductCarousel
+              products={bestSellerItems}
+              variant="spotlight"
+              showUsageBadge
+              ariaLabel={ar ? "الأكثر طلباً ومبيعاً" : "Most requested equipment carousel"}
+            />
+          </div>
+        </section>
+
+        {/* 5. DIRECT INSTANT PDF QUOTATION */}
         <section className="ics-quote-band" id="instant-quote" aria-labelledby="quote-band-title">
           <div className="ics-shell ics-explainer-grid">
             <div>
@@ -341,24 +404,24 @@ export default function HomePage() {
               <p className="ics-quote-band-lead">
                 {hasSelection
                   ? (ar
-                      ? `لديك ${activeLines.length} بند بإجمالي تقديري ${money(previewTotal, "ar")}. نزّل ملف PDF الرسمي الآن أو عدّل الكميات.`
-                      : `You have ${activeLines.length} selected item(s) totaling ${money(previewTotal, "en")}. Download your PDF now or adjust quantities.`)
+                      ? `لديك ${activeLines.length} ${activeLines.length === 1 ? "بند" : "بنود"} بإجمالي ${money(quoteTotal(activeLines), "ar")}. نزّل ملف الـ PDF الرسمي فوراً أو افتح النافذة لتعديل الكميات.`
+                      : `You have ${activeLines.length} selected line item(s) totaling ${money(quoteTotal(activeLines), "en")}. Download your official Arabic PDF now or open the editor.`)
                   : (ar
-                      ? "أضف المعدات التي يحتاجها مشروعك بالكميات المطلوبة، ونزّل ملف PDF عربي منسّقاً باسم وشعار ICS فوراً بدون خطوات معقدة."
-                      : "Pick your equipment and quantities, then download an official Arabic PDF document bearing the ICS logo and reference number.")}
+                      ? "بمجرد إضافة المعدات وتحديد الكميات من الكتالوج، يصبح ملف عرض السعر العربي الرسمي جاهزاً للتحميل الفوري بالكميات والإجمالي الصحيح بدون نماذج تسجيل معقدة."
+                      : "Once you select equipment from the catalog, your official Arabic PDF quotation is generated instantly on your device with verified quantities and totals.")}
               </p>
 
               <ul className="ics-quote-checklist">
                 <li>
-                  <Check size={16} aria-hidden="true" />
+                  <span className="ics-check-badge" aria-hidden="true"><Check size={14} /></span>
                   <span>{ar ? "شعار ICS الرسمي، رقم مرجعي، وتاريخ الإصدار" : "Official ICS branding, unique reference code & date"}</span>
                 </li>
                 <li>
-                  <Check size={16} aria-hidden="true" />
+                  <span className="ics-check-badge" aria-hidden="true"><Check size={14} /></span>
                   <span>{ar ? "جدول الكميات وأسعار الوحدات والإجمالي بالحساب الصحيح" : "Verified quantities, unit pricing & calculated totals"}</span>
                 </li>
                 <li>
-                  <Check size={16} aria-hidden="true" />
+                  <span className="ics-check-badge" aria-hidden="true"><Check size={14} /></span>
                   <span>{ar ? "تنبيه واضح بحالة الأسعار الاسترشادية لحين الاعتماد" : "Clear provisional pricing notice pending final review"}</span>
                 </li>
               </ul>
@@ -453,7 +516,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 5. ENGINEERING DESK & PROJECT BOQ */}
+        {/* 6. ENGINEERING DESK & PROJECT BOQ */}
         <section className="ics-boq-banner" aria-labelledby="boq-banner-title">
           <div className="ics-shell ics-boq-grid">
             <div className="ics-boq-copy">

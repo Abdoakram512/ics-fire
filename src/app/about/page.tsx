@@ -79,7 +79,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 32, color: "var(--muted)", fontSize: "0.98rem", lineHeight: 1.85 }}>
+          <div className="ics-about-copy-grid">
             <p>
               {ar
                 ? "تتطلب سلامة الأرواح والمنشآت أنظمة إطفاء موثوقة تعمل بكفاءة مطلقة عند أول لحظة خطر. في شركة ICS، نلتزم بتوريد معدات مجربة ومختبرة في كبرى المعامل الدولية المعتمدة، لضمان استجابة سريعة وحماية متكاملة للبنى التحتية والمباني الحيوية."
@@ -113,7 +113,7 @@ export default function AboutPage() {
 
         {/* Facility Engineering Banner */}
         <section style={{ background: "var(--surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", paddingBlock: "55px" }}>
-          <div className="ics-shell" style={{ display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 40, alignItems: "center" }}>
+          <div className="ics-shell ics-about-hazard-grid">
             <div>
               <p className="ics-eyebrow">{ar ? "تغطية كافة المخاطر" : "Risk-Engineered Hardware"}</p>
               <h2 style={{ fontSize: "clamp(1.7rem, 3vw, 2.4rem)", fontWeight: 750, lineHeight: 1.3 }}>
@@ -130,7 +130,7 @@ export default function AboutPage() {
               </Link>
             </div>
 
-            <div style={{ position: "relative", height: 320, borderRadius: 8, overflow: "hidden", border: "1px solid var(--border)" }}>
+            <div className="ics-about-hazard-photo">
               <Image
                 src="/assets/about-architecture.png"
                 alt="Modern commercial infrastructure protected by ICS fire systems"

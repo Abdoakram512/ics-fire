@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Mail, Phone, MapPin, Clock, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { brand } from "@/lib/catalog";
+import IcsLogo from "./IcsLogo";
 
 export default function Footer() {
   const { lang } = useApp();
@@ -15,11 +15,11 @@ export default function Footer() {
       <div className="ics-shell ics-footer-grid">
         {/* Column 1: Brand & Authority */}
         <div className="ics-footer-col ics-footer-brand-col">
-          <Link className="ics-footer-brand" href="/" aria-label="ICS Fire Systems">
-            <Image src="/assets/ics-logo-tight.png" alt="" width={36} height={40} />
+          <Link className="ics-footer-brand" href="/" aria-label={ar ? "ICS لأنظمة مكافحة الحريق" : "ICS Fire Systems"}>
+            <IcsLogo className="ics-logo-mark" size={80} />
             <div>
-              <strong>{brand.name}</strong>
-              <small>{ar ? "أنظمة مكافحة الحريق والسلامة" : "Certified Fire Protection Systems"}</small>
+              <strong>{ar ? "ICS لأنظمة مكافحة الحريق" : brand.name}</strong>
+              <small>{ar ? "معدات السلامة والحماية المعتمدة" : "Certified Fire Protection Systems"}</small>
             </div>
           </Link>
           <p className="ics-footer-desc">

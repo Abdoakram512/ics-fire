@@ -10,27 +10,27 @@
 }
 
 :root {
-  --background: #F4F3EF;
-  --foreground: #161B22;
-  --foreground-muted: #57606A;
-  --rule-border: #DFDDD6;
-  --card-bg: #FCFCFA;
-  --card-bg-subtle: #EBE9E3;
-  --brand-red: #9B1C1C;
-  --brand-red-dark: #7E1515;
-  --brand-amber: #7F632C;
+  --background: #F7F6F3;
+  --foreground: #191C20;
+  --foreground-muted: #5E6770;
+  --rule-border: #D9DDE0;
+  --card-bg: #FFFFFF;
+  --card-bg-subtle: #EFECE6;
+  --brand-red: #991B1F;
+  --brand-red-dark: #7F171B;
+  --brand-amber: #D99736;
 }
 
 .dark {
-  --background: #13171D;
-  --foreground: #EDEBE6;
-  --foreground-muted: #9DA6B2;
-  --rule-border: #2B323D;
-  --card-bg: #1D232C;
-  --card-bg-subtle: #242B36;
-  --brand-red: #C74640;
-  --brand-red-dark: #B13B36;
-  --brand-amber: #B89B62;
+  --background: #121519;
+  --foreground: #F2F3F5;
+  --foreground-muted: #A4ACB5;
+  --rule-border: #2C323B;
+  --card-bg: #1D2127;
+  --card-bg-subtle: #252A31;
+  --brand-red: #C73E43;
+  --brand-red-dark: #AD3136;
+  --brand-amber: #D99736;
 }
 html {
   scroll-padding-top: 90px;

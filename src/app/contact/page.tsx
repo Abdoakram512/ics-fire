@@ -194,7 +194,7 @@ export default function ContactPage() {
                   />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div className="ics-form-row">
                   <div className="ics-form-group">
                     <label htmlFor="contact-email">
                       {ar ? "البريد الإلكتروني المؤسسي *" : "Corporate Email *"}
@@ -223,7 +223,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div className="ics-form-row">
                   <div className="ics-form-group">
                     <label htmlFor="contact-company">
                       {ar ? "اسم الشركة / المقاول العام" : "Company / Contractor Name"}
