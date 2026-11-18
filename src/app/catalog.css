@@ -501,6 +501,12 @@ body:has(dialog[open]) {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+}
+
+.ics-hero-slider-wrap {
+  position: relative;
+  width: 100%;
 }
 
 .ics-hero-image {
@@ -519,6 +525,7 @@ body:has(dialog[open]) {
     0 28px 56px -12px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transition: transform .25s ease, border-color .25s ease;
+  overflow: hidden;
 }
 
 .dark .ics-hero-image {
@@ -530,8 +537,24 @@ body:has(dialog[open]) {
 }
 
 .ics-hero-image:hover {
-  transform: translateY(-3px);
   border-color: rgba(255, 255, 255, 0.28);
+}
+
+.ics-hero-slide-badge {
+  position: absolute;
+  top: 18px;
+  inset-inline-start: 20px;
+  z-index: 5;
+  padding: 5px 13px;
+  border-radius: 6px;
+  background: rgba(155, 28, 28, 0.88);
+  color: #FFFFFF;
+  font-size: .75rem;
+  font-weight: 750;
+  letter-spacing: .04em;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 .ics-hero-image img {
@@ -545,14 +568,62 @@ body:has(dialog[open]) {
   transform: scale(1.02);
 }
 
-.ics-hero-image img,
-.ics-product-photo img {
-  object-fit: contain;
-  transition: transform .25s ease;
+.ics-hero-arrow {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(18, 16, 20, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color .18s ease, transform .15s ease, border-color .18s ease;
 }
 
-.ics-hero-image img {
-  padding: 24px;
+.ics-hero-arrow:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.ics-hero-prev {
+  inset-inline-start: 14px;
+}
+
+.ics-hero-next {
+  inset-inline-end: 14px;
+}
+
+.ics-hero-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.ics-hero-dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: width .2s ease, background-color .2s ease, border-radius .2s ease;
+}
+
+.ics-hero-dot.is-active {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--accent);
 }
 
 .ics-hero-caption {
@@ -561,7 +632,7 @@ body:has(dialog[open]) {
   justify-content: center;
   flex-wrap: wrap;
   gap: 8px 15px;
-  margin-top: 15px;
+  margin-top: 10px;
   font-size: .82rem;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -600,11 +671,110 @@ body:has(dialog[open]) {
   padding-bottom: 5px;
 }
 
-/* Unified Catalog Showcase: Interactive Certified Products */
+/* Bestsellers Showcase & Smooth Horizontal Carousel (4Hand Inspired) */
 .ics-catalog-showcase {
   padding-block: 56px 68px;
   background: var(--paper);
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.ics-bestsellers-heading {
+  align-items: flex-end;
+  margin-bottom: 22px;
+}
+
+.ics-section-sub {
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.6;
+  margin-top: 6px;
+  max-width: 58ch;
+}
+
+.ics-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.ics-carousel-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ics-carousel-arrow {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ics-carousel-arrow:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+.ics-bestsellers-all {
+  white-space: nowrap;
+}
+
+.ics-carousel-container {
+  position: relative;
+  margin-inline: -8px;
+  padding-inline: 8px;
+}
+
+.ics-carousel-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-block: 8px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ics-carousel-track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.ics-carousel-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ics-carousel-track::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.ics-carousel-track::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+.ics-carousel-slide {
+  flex: 0 0 300px;
+  min-width: 300px;
+  max-width: 300px;
+  scroll-snap-align: start;
+  display: flex;
+}
+
+.ics-carousel-slide .ics-product {
+  width: 100%;
 }
 
 /* Direct Instant PDF Quote Band: Deep Architectural Graphite Surface */
@@ -950,13 +1120,17 @@ body:has(dialog[open]) {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 8px;
-  transition: border-color .18s ease, box-shadow .18s ease;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .18s ease;
 }
 
 .ics-product:hover {
+  transform: translateY(-4px);
   border-color: var(--border-strong);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
 }
 
 .ics-product-photo {
