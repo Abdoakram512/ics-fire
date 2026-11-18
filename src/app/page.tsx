@@ -14,7 +14,6 @@ import {
   Truck,
   PhoneCall,
   FileSpreadsheet,
-  Sparkles,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -90,10 +89,9 @@ export default function HomePage() {
         <section className="ics-hero">
           <div className="ics-shell ics-hero-grid">
             <div className="ics-hero-copy">
-              <div className="ics-hero-badge">
-                <Sparkles size={14} className="ics-badge-icon" aria-hidden="true" />
-                <span>{ar ? "أنظمة مكافحة الحريق والسلامة الصناعية" : "Industrial Fire Protection & Safety Systems"}</span>
-              </div>
+              <p className="ics-eyebrow">
+                {ar ? "أنظمة مكافحة الحريق والسلامة الصناعية" : "Industrial Fire Protection & Safety Systems"}
+              </p>
 
               <h1>
                 {ar ? "معدات الحريق المعتمدة" : "Fire protection"}

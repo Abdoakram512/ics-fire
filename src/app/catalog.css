@@ -404,33 +404,23 @@ body:has(dialog[open]) {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 1.05fr 1fr;
+  grid-template-columns: 0.95fr 1.05fr;
   align-items: center;
-  gap: 46px;
-  padding-block: 64px;
+  gap: 52px;
+  padding-block: 56px 68px;
 }
 
-/* Luxury Eyebrow Badge as shown in User Screenshot */
-.ics-hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 16px;
-  border-radius: 9999px;
-  background: rgba(25, 20, 22, 0.65);
-  border: 1px solid rgba(220, 180, 100, 0.45);
-  color: #F8D384;
-  font-size: .82rem;
+.ics-hero-copy .ics-eyebrow {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: .84rem;
   font-weight: 700;
-  margin-bottom: 18px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  letter-spacing: .06em;
+  margin-bottom: 16px;
 }
 
-.ics-hero-badge .ics-badge-icon {
-  color: #F8D384;
-  flex-shrink: 0;
+.ics-hero-copy .ics-eyebrow::before {
+  background: var(--accent);
+  width: 24px;
 }
 
 .ics-hero h1 {
@@ -442,7 +432,7 @@ body:has(dialog[open]) {
   font-style: normal;
 }
 
-.ics-hero-copy > p:not(.ics-hero-badge) {
+.ics-hero-copy > p:not(.ics-eyebrow) {
   max-width: 48ch;
   margin-block: 20px;
   color: rgba(255, 255, 255, 0.88);
@@ -508,28 +498,51 @@ body:has(dialog[open]) {
 
 .ics-hero-visual {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .ics-hero-image {
   display: block;
   position: relative;
-  height: 410px;
-  border-radius: 12px;
+  width: 100%;
+  height: 520px;
+  border-radius: 18px;
   isolation: isolate;
-  background: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
-  transition: transform .25s ease, box-shadow .25s ease;
+  background: 
+    radial-gradient(ellipse at 50% 88%, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.15) 40%, transparent 70%),
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.32) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 
+    0 28px 56px -12px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition: transform .25s ease, border-color .25s ease;
 }
 
 .dark .ics-hero-image {
-  background: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: 
+    radial-gradient(ellipse at 50% 88%, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 40%, transparent 70%),
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.4) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ics-hero-image:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.38);
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.ics-hero-image img {
+  padding: 10px 16px;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.55));
+  transition: transform .25s ease;
+}
+
+.ics-hero-image:hover img {
+  transform: scale(1.02);
 }
 
 .ics-hero-image img,
@@ -949,19 +962,35 @@ body:has(dialog[open]) {
 .ics-product-photo {
   display: block;
   position: relative;
-  height: 224px;
-  background: var(--photo);
+  height: 228px;
+  background: 
+    radial-gradient(ellipse at 50% 86%, rgba(0, 0, 0, 0.07) 0%, transparent 55%),
+    linear-gradient(180deg, #FFFFFF 0%, #F7F6F2 100%);
   border-bottom: 1px solid var(--border);
   isolation: isolate;
+  overflow: hidden;
+}
+
+.dark .ics-product-photo {
+  background: 
+    radial-gradient(ellipse at 50% 86%, rgba(0, 0, 0, 0.4) 0%, transparent 60%),
+    linear-gradient(180deg, #222934 0%, #181D25 100%);
+  border-bottom: 1px solid var(--border);
 }
 
 .ics-product-photo img {
-  padding: 20px 26px;
+  padding: 12px 18px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
   transition: transform .25s ease;
 }
 
+.dark .ics-product-photo img {
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+}
+
 .ics-product-photo:hover img {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .ics-product-body {
@@ -1192,12 +1221,20 @@ body:has(dialog[open]) {
   color: var(--accent);
 }
 
-/* Architectural Standards Strip - Airy, Crisp Hairline Framing with Soft Icon Badge */
+/* Architectural Standards Strip - Bold Fire Safety Crimson ("ودي تبقى احمر") */
 .ics-trust-bar {
-  background: var(--surface);
-  color: var(--ink);
-  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #7A1212 0%, #8E1616 35%, #9B1C1C 70%, #6E0E0E 100%);
+  color: #FFFFFF;
+  border-top: 1px solid #5A0C0C;
+  border-bottom: 1px solid #5A0C0C;
   padding-block: 22px;
+  box-shadow: 0 4px 18px rgba(122, 18, 18, 0.25);
+}
+
+.dark .ics-trust-bar {
+  background: linear-gradient(135deg, #5B0C0C 0%, #7A1212 40%, #8E1616 75%, #4C0909 100%);
+  border-top: 1px solid #3E0707;
+  border-bottom: 1px solid #3E0707;
 }
 
 .ics-trust-grid {
@@ -1211,7 +1248,7 @@ body:has(dialog[open]) {
   align-items: center;
   gap: 14px;
   padding: 8px 14px;
-  border-inline-end: 1px solid var(--border);
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .ics-trust-item:last-child {
@@ -1225,28 +1262,29 @@ body:has(dialog[open]) {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: rgba(155, 28, 28, 0.07);
-  border: 1px solid rgba(155, 28, 28, 0.16);
-  color: var(--accent);
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  backdrop-filter: blur(4px);
 }
 
 .dark .ics-trust-icon {
-  background: rgba(199, 70, 64, 0.14);
-  border-color: rgba(199, 70, 64, 0.28);
-  color: #E58C87;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
 }
 
 .ics-trust-text h3 {
   font-size: .94rem;
   font-weight: 750;
   line-height: 1.35;
-  color: var(--ink);
+  color: #FFFFFF;
   letter-spacing: 0;
 }
 
 .ics-trust-text p {
   font-size: .78rem;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.55;
   margin-top: 3px;
 }
@@ -1584,12 +1622,30 @@ body:has(dialog[open]) {
 }
 
 .ics-detail-photo {
-  height: 405px;
-  border-radius: 9px;
+  height: 440px;
+  border-radius: 14px;
+  background: 
+    radial-gradient(ellipse at 50% 86%, rgba(0, 0, 0, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #F7F6F2 100%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .ics-detail-photo {
+  background: 
+    radial-gradient(ellipse at 50% 86%, rgba(0, 0, 0, 0.45) 0%, transparent 60%),
+    linear-gradient(180deg, #222934 0%, #181D25 100%);
+  border: 1px solid var(--border);
 }
 
 .ics-detail-photo img {
-  padding: 30px;
+  padding: 16px 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.12));
+}
+
+.dark .ics-detail-photo img {
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.5));
 }
 
 .ics-detail-price {
