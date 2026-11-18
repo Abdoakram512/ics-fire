@@ -1,26 +1,215 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-serif), Georgia, serif;
+  --color-brand-red: #9B1C1C;
+  --color-brand-red-dark: #7E1515;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F4F3EF;
+  --foreground: #161B22;
+  --foreground-muted: #57606A;
+  --rule-border: #DFDDD6;
+  --card-bg: #FCFCFA;
+  --card-bg-subtle: #EBE9E3;
+  --brand-red: #9B1C1C;
+  --brand-red-dark: #7E1515;
+  --brand-amber: #7F632C;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #13171D;
+  --foreground: #EDEBE6;
+  --foreground-muted: #9DA6B2;
+  --rule-border: #2B323D;
+  --card-bg: #1D232C;
+  --card-bg-subtle: #242B36;
+  --brand-red: #C74640;
+  --brand-red-dark: #B13B36;
+  --brand-amber: #B89B62;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-padding-top: 90px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: clip;
 }
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+/* ==========================================================================
+   Natural Human Arabic Typography (Clean, Authentic, Eye-Friendly)
+   ========================================================================== */
+[dir="rtl"],
+[dir="rtl"] body {
+  font-family: var(--font-cairo), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  letter-spacing: 0 !important;
+  word-spacing: normal !important;
+}
+
+[dir="rtl"] [dir="ltr"],
+[dir="rtl"] code {
+  font-family: monospace;
+  letter-spacing: normal !important;
+}
+
+[dir="rtl"] :is(h1, h2, h3, h4, h5, h6, .font-serif) {
+  font-family: var(--font-cairo), sans-serif !important;
+  letter-spacing: 0 !important;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+[dir="rtl"] :is(p, span, button, a, input, textarea, li, strong, b, em, label, bdi, small) {
+  font-family: var(--font-cairo), sans-serif !important;
+  letter-spacing: 0 !important;
+  line-height: 1.7;
+}
+
+/* Invert directional icons in RTL */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* ==========================================================================
+   Swiss Architectural Hairline Dividers & Clean Grid System
+   ========================================================================== */
+.hairline-border {
+  border-color: var(--rule-border);
+}
+
+.swiss-grid-cell {
+  background-color: var(--card-bg);
+  border: 1px solid var(--rule-border);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.swiss-grid-cell:hover {
+  border-color: #9E1C1C;
+}
+
+/* Interactive subtle pulse effect */
+@keyframes ping-subtle {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.15;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+.animate-ping-subtle {
+  animation: ping-subtle 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ==========================================================================
+   Accessibility & Interactive Focus States (WCAG AA)
+   ========================================================================== */
+:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Warm Architectural & Eye-Friendly Industrial Styling
+   ========================================================================== */
+.btn-clean-primary {
+  background-color: #9B1C1C;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-clean-primary:hover {
+  background-color: #7E1515;
+}
+
+.btn-clean-primary:active {
+  transform: translateY(0);
+}
+
+.btn-clean-secondary {
+  background-color: #FCFCFA;
+  color: #161B22;
+  border: 1px solid #C7C4BA;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-clean-secondary:hover {
+  background-color: #EBE9E3;
+  border-color: #9B1C1C;
+  color: #161B22;
+}
+
+.dark .btn-clean-secondary {
+  background-color: #1D232C;
+  color: #EDEBE6;
+  border-color: #394250;
+}
+
+.dark .btn-clean-secondary:hover {
+  background-color: #242B36;
+  border-color: #C74640;
+  color: #ffffff;
+}
+
+.card-clean {
+  background-color: var(--card-bg);
+  border: 1px solid var(--rule-border);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-clean:hover {
+  box-shadow: 0 4px 12px 0 rgba(22, 27, 34, 0.06);
+  border-color: #C7C4BA;
+}
+
+.dark .card-clean:hover {
+  border-color: #394250;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+}
+
+.banner-clean {
+  background-color: #1C2128;
+  color: #ffffff;
+}
+
+.dark .banner-clean {
+  background-color: #14181E;
+  border-top: 1px solid #2B323D;
+}
+
+/* Dark mode select option styling for consistent OS rendering */
+.dark select option {
+  background-color: #1D232C;
+  color: #EDEBE6;
+}
+
+@font-face { font-family: Inter; src: url("./fonts/inter-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: Cairo; src: url("./fonts/cairo-latin.woff2") format("woff2"); font-weight: 200 1000; font-display: swap; }
+@font-face { font-family: Cairo; src: url("./fonts/cairo-arabic.woff2") format("woff2"); font-weight: 200 1000; font-display: swap; unicode-range: U+0600-06FF,U+0750-077F,U+0870-089F,U+08A0-08FF,U+200C-200F,U+FB50-FDFF,U+FE70-FEFF; }
+:root { --font-inter: Inter; --font-cairo: Cairo; }

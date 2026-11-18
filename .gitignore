@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local image cutout backups
+/public/assets_clean/
+/public/assets_orig/
