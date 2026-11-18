@@ -672,7 +672,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppContextProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
-  const [lang, setLangState] = useState<Lang>("en");
+  const [lang, setLangState] = useState<Lang>("ar");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -685,8 +685,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       document.documentElement.classList.remove("dark");
     }
 
-    // Read saved language
-    const savedLang = (localStorage.getItem("ics-lang") as Lang) || "en";
+    // Read saved language (defaults to Arabic 'ar')
+    const savedLang = (localStorage.getItem("ics-lang") as Lang) || "ar";
     setLangState(savedLang);
     document.documentElement.setAttribute("dir", savedLang === "ar" ? "rtl" : "ltr");
     document.documentElement.setAttribute("lang", savedLang);

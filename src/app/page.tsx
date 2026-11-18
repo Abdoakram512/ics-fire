@@ -209,7 +209,7 @@ export default function HomePage() {
                     alt={heroProduct[lang]}
                     fill
                     sizes="(max-width: 767px) 88vw, 44vw"
-                    preload
+                    priority
                   />
                 </Link>
 
